@@ -5,8 +5,7 @@ build/
 dist/
 wheels/
 *.egg-info
-.envpip freeze > requirements.txt
-
+.env
 # Virtual environments
 .venv
 
