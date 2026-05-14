@@ -1,34 +1,29 @@
-from fastapi import FastAPI
-from models import Movie
-from database import movie_collection
+from fastapi import FastAPI, HTTPException
 from bson import ObjectId
-from fastapi import HTTPException
 
+from models import MovieData
+from database import movies_collection
 
 app = FastAPI()
 
 
-@app.get("/")
-def home():
-    return {
-        "message": "Movie API Running"
-    }
-
 @app.post("/movies")
-def create_movie(movie: Movie):
-    movie_data = movie.dict()
-    result = movie_collection.insert_one(movie_data)
+def create_movie(movie_data: MovieData):
 
-    created_movie = movie_collection.find_one({"_id": result.inserted_id})
+    new_movie = movie_data.dict()
+
+    inserted_movie = movies_collection.insert_one(new_movie)
+
+    created_movie = movies_collection.find_one(
+        {"_id": inserted_movie.inserted_id}
+    )
 
     created_movie["_id"] = str(created_movie["_id"])
 
     return {
-        "message" : "Movie Created Successfully",
+        "message": "Movie created successfully",
         "movie": created_movie
     }
-
-
 
 
 @app.get("/movies/{movie_id}")
@@ -40,19 +35,19 @@ def get_movie(movie_id: str):
             detail="Invalid movie ID"
         )
 
-    movie = movie_collection.find_one(
+    found_movie = movies_collection.find_one(
         {"_id": ObjectId(movie_id)}
     )
 
-    if not movie:
+    if not found_movie:
         raise HTTPException(
             status_code=404,
             detail="Movie not found"
         )
 
-    movie["_id"] = str(movie["_id"])
+    found_movie["_id"] = str(found_movie["_id"])
 
     return {
         "message": "Movie fetched successfully",
-        "movie": movie
+        "movie": found_movie
     }

@@ -4,10 +4,10 @@ import os
 
 load_dotenv()
 
-MONGO_URL = os.getenv("MONGO_URL")
+mongodb_url = os.getenv("MONGO_URL")
 
-client = MongoClient(MONGO_URL)
+mongodb_client = MongoClient(mongodb_url)
 
-db = client.movie_db
+movie_database = mongodb_client.movie_database
 
-movie_collection = db.movies
+movies_collection = movie_database.movies
