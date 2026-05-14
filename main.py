@@ -7,7 +7,7 @@ from database import movies_collection
 app = FastAPI()
 
 
-@app.post("/movies")
+@app.post("/insert-movies")
 def create_movie(movie_data: MovieData):
 
     new_movie = movie_data.dict()
@@ -50,4 +50,18 @@ def get_movie(movie_id: str):
     return {
         "message": "Movie fetched successfully",
         "movie": found_movie
+    }
+@app.get("/movies")
+def get_all_movies():
+
+    all_movies = []
+
+    for movie in movies_collection.find():
+
+        movie["_id"] = str(movie["_id"])
+
+        all_movies.append(movie)
+
+    return {
+        "movies": all_movies
     }
