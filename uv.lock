@@ -97,7 +97,7 @@ wheels = [
 ]
 
 [[package]]
-name = "movie-api"
+name = "movie-collection-api"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
